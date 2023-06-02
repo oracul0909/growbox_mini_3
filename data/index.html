@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="data:,">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta name="viewport" content="width=device-width">
+  <meta name="google" content="notranslate">
+  <link type="image/x-icon" rel="shortcut icon" href="favicon.ico">
+  <script type="text/javascript" src="flotr2.min.js"></script>
+  <script type="text/javascript" src="jquery.js"></script>
+  <script type="text/javascript" src="graph.js"></script>
+  <script type="text/javascript" src="button_control.js"></script>
+  <script type="text/javascript" src="server_IO.js"></script>
+  <link rel="stylesheet" type="text/css" href="style.css" />
+
+  <title>Умная теплица</title>
+</head>
+
+<body>
+  <div class="content-wrapper">
+
+    <header class="header">
+      <p style=" padding: 0px 10px; margin-top: auto; margin-bottom: auto; margin-left: 5%;"><img src="logo.png"> </p>
+      <p style="margin-top: auto; margin-bottom: auto; padding: 10px 4em;"><img src="head.png"></p>
+    </header>
+
+    <div class="container clearfix">
+      <main class="content">
+
+        <p>
+        <div id="graphic_1"></div>
+        </p>
+
+        <p>
+        <div id="graphic_2"></div>
+        </p>
+
+        <p>
+        <div id="graphic_3"></div>
+        </p>
+
+        <p>
+        <h2>Ручное управление поливом</h2>
+        <table>
+          <tr>
+            <td>
+              <h3 style="text-align: center; ">Полив</h3>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div style="text-align:center; margin-left: 22%;">
+                <div class="switch demo3">
+                  <input type="checkbox" id="water_forcibly_stop" onclick="water_switch();">
+                  <label><i></i></label>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="indicator_red" id="water_pump_status" ></div>
+            </td>
+          </tr>
+        </table>
+        </p>
+
+        <p>
+        <h2>Ручное управление освещением</h2>
+        <table>
+          <tr>
+            <td>
+              <h3 style="text-align: left; margin-left: 30%;">Фито свет</h3>
+            </td>
+            <td>
+              <h3 style="text-align: left; margin-left: 28%;">Дневной свет</h3>
+            </td>
+            <td>
+              <h3 style="text-align: left; margin-left: 20%;">Гасить дневной свет<br>когда работает фито</h3>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div style="text-align:center;">
+                <div class="switch demo3">
+                  <input type="checkbox" id="fito_forcibly_stop" onclick="fito_switch();">
+                  <label><i></i></label>
+                </div>
+              </div>
+            </td>
+            <td>
+              <div style="text-align:center;">
+                <div class="switch demo3">
+                  <input type="checkbox" id="white_forcibly_stop" onclick="white_switch();">
+                  <label><i></i></label>
+                </div>
+              </div>
+            </td>
+            <td>
+              <div style="text-align:center;">
+                <div class="switch demo3">
+                  <input type="checkbox" id="only_one_light" onclick="only_one_light_switch();">
+                  <label><i></i></label>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="indicator_red" id="fito_light_status" ></div>
+            </td>
+            <td>
+              <div class="indicator_red" id="white_light_status" ></div>
+            </td>
+            <td></td>
+          </tr>
+        </table>
+        </p>
+      </main>
+
+
+      <aside class="sidebar sidebar1">
+
+        <p style="text-align: center;"></p>
+
+        <!--температура воздуха-->
+        <h2>Установка температуры</h2>
+        <p>
+        <h3>День</h3>
+        <button type="button" id="btn" onclick="temp_day_minus();">-</button>
+        <input id="temperature_inside_day" type="text">
+        <button type="button" id="btn" onclick="temp_day_plus();">+</button>
+        </p>
+        <p>
+        <h3>Ночь</h3>
+        <button type="button" id="btn" onclick="temp_night_minus();">-</button>
+        <input id="temperature_inside_night" type="text">
+        <button type="button" id="btn" onclick="temp_night_plus();">+</button>
+        </p>
+
+        <!--влажность воздуха-->
+        <h2 style="margin-top: 60px;">Установка влажности воздуха</h2>
+        <p>
+        <h3>День</h3>
+        <button type="button" id="btn" onclick="hum_day_minus();">-</button>
+        <input id="humidity_inside_day" type="text">
+        <button type="button" id="btn" onclick="hum_day_plus();">+</button>
+        </p>
+        <p>
+        <h3>Ночь</h3>
+        <button type="button" id="btn" onclick="hum_night_minus();">-</button>
+        <input id="humidity_inside_night" type="text">
+        <button type="button" id="btn" onclick="hum_night_plus();">+</button>
+        </p>
+
+        <!--влажность почвы-->
+        <h2 style="margin-top: 60px;">Установка влажности<br>почвы</h2>
+        <p>
+        <h3>Максимум</h3>
+        <button type="button" id="btn" onclick="ground_max_minus();">-</button>
+        <input id="ground_humidity_max" type="text">
+        <button type="button" id="btn" onclick="ground_max_plus();">+</button>
+        </p>
+        <p>
+        <h3>Минимум</h3>
+        <button type="button" id="btn" onclick="ground_min_minus();">-</button>
+        <input id="ground_humidity_min" type="text">
+        <button type="button" id="btn" onclick="ground_min_plus();">+</button>
+        </p>
+
+        <!--освещенность-->
+        <h2 style="margin-top: 60px;">Порог освещенности</h2>
+        <p>
+          <button type="button" id="btn" onclick="light_intencity_minus();">-</button>
+          <input id="light_intencity_border" type="text">
+          <button type="button" id="btn" onclick="light_intencity_plus();">+</button>
+        </p>
+        <!--
+        <h2 style="margin-top: 60px;">День / Ночь</h2>
+        <p>
+        <h3>Начало дня</h3>
+        <input type="time" id="day_time_start" name="day_time_start" />
+        </p>
+        <p>
+        <h3>Начало ночи</h3>
+        <input type="time" id="night_time_start" name="night_time_start" />
+        </p>
+-->
+      </aside>
+    </div>
+
+    <footer class="footer">
+      <p style="font-size: 20px; text-align:center; margin: 0; padding: 30px 5em;">Данная страница предназначена, только
+        для демонстрации работы умной теплицы INTLER </p>
+    </footer>
+
+  </div>
+</body>
+
+
+<script type="text/javascript">
+
+
+  var graphic_1_container = document.getElementById("graphic_1");
+  var graphic_2_container = document.getElementById('graphic_2');
+  var graphic_3_container = document.getElementById('graphic_3');
+
+  var DATA_TEMPERATURE_INSIDE_DAY;
+  var DATA_TEMPERATURE_INSIDE_NIGHT;
+  var DATA_TEMPERATURE_INSIDE;
+  var DATA_TEMPERATURE_OUTSIDE;
+  var DATA_HUMIDITY_INSIDE_DAY;
+  var DATA_HUMIDITY_INSIDE_NIGHT;
+  var DATA_HUMIDITY_INSIDE;
+  var DATA_HUMIDITY_OUTSIDE;
+  var DATA_GROUND_HUMIDITY_MAX;
+  var DATA_GROUND_HUMIDITY_MIN;
+  var DATA_GROUND_HUMIDITY;
+  var DATA_LIGHT_INTENCITY_BORDER;
+  var DATA_ONLY_ONE_LIGHT;
+  var DATA_WATER_FORCIBLY_STOP;
+  var DATA_FITO_FORCIBLY_STOP;
+  var DATA_WIGHT_FORCIBLY_STOP;
+  var DATA_WATER_PUMP_STATUS;
+  var DATA_FITO_LIGHT_STATUS;
+  var DATA_WHITE_LIGHT_STATUS;
+
+  $(document).ready(function () {
+    getDataFromServer();
+  });
+
+  setTimeout(function () {
+    data_array_init();
+    draw_graf_1();
+    draw_graf_2();
+    draw_graf_3();
+  }, 1000);
+
+  setInterval(function () {
+    getDataFromServer();
+  }, 2000);
+
+  setInterval(function () {
+    data_array_shift();
+    draw_graf_1();
+    draw_graf_2();
+    draw_graf_3();
+  }, 60000);
+
+
+
+</script>
+
+</html>
